@@ -1,0 +1,35 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.claro.amx.sp.dataconsumptionservice.mapper.ccard.DataConsumptionMapper">
+
+    <resultMap id="map_GetConsumptionDataResult" type="com.claro.amx.sp.dataconsumptionservice.model.ccard.DataDailyConsumption">
+        <result property="cdrDate" column="DDC_CDR_DATE"/>
+        <result property="roaming" column="DDC_ROAMING"/>
+        <result property="cost" column="DDC_SUM_COST"/>
+        <result property="volume" column="DDC_SUM_VOLUME"/>
+        <result property="ratingGroup" column="DDC_RATING_GROUP"/>
+    </resultMap>
+
+    <select id="getDataConsumption" resultMap="map_GetConsumptionDataResult">
+        SELECT DDC_CDR_DATE,
+        DDC_ROAMING,
+        DDC_SUM_COST,
+        DDC_SUM_VOLUME,
+        DDC_RATING_GROUP
+        FROM DATA_DAILY_CONSUMPTION
+        WHERE DDC_SUBSCRIBER_ID = #{billNumber}
+        AND DDC_KEY_PARTITION = #{keyPartition}
+        AND DDC_CDR_DATE BETWEEN TO_DATE(#{dateFrom}, 'DD-MM-YYYY') AND TO_DATE(#{dateTo}, 'DD-MM-YYYY')
+        <if test="ratingGroups != null">
+            AND DDC_RATING_GROUP IN
+            <foreach collection="ratingGroups" item="ratingGroup" open="(" separator="," close=")">
+                #{ratingGroup}
+            </foreach>
+        </if>
+        <if test="roaming != null">
+            AND DDC_ROAMING = #{roaming}
+        </if>
+    </select>
+
+</mapper>

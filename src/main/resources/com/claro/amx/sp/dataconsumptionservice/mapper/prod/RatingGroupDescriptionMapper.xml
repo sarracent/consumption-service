@@ -1,0 +1,19 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.claro.amx.sp.dataconsumptionservice.mapper.prod.RatingGroupDescriptionMapper">
+
+    <resultMap id="map_GetRatingGroupDescriptionResult"
+               type="com.claro.amx.sp.dataconsumptionservice.model.prod.RatingGroupDescription">
+        <result property="ratingGroupId" column="RATING_GROUP"/>
+        <result property="description" column="SER_DESCRIPTION"/>
+    </resultMap>
+    <select id="getRatingGroups" resultMap="map_GetRatingGroupDescriptionResult">
+        SELECT RATING_GROUP, SER_DESCRIPTION
+        FROM V_RATING_GROUP_DESCRIPTION
+        WHERE RATING_GROUP IN
+        <foreach collection="ratingGroups" item="ratingGroup" open="(" separator="," close=")">
+            #{ratingGroup}
+        </foreach>
+    </select>
+</mapper>

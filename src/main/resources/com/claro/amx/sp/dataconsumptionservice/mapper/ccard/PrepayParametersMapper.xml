@@ -1,0 +1,17 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.claro.amx.sp.dataconsumptionservice.mapper.ccard.PrepayParametersMapper">
+
+    <resultMap id="map_GetPrepayParametersDataResult" type="com.claro.amx.sp.dataconsumptionservice.model.ccard.PrepayParameters">
+        <result property="name" column="PPA_NAME"/>
+        <result property="value" column="PPA_VALUE"/>
+    </resultMap>
+
+    <select id="getPrepayParametersData" resultMap="map_GetPrepayParametersDataResult">
+        SELECT PPA_NAME, PPA_VALUE
+        FROM PREPAY_PARAMETERS
+        WHERE PPA_NAME = #{parameterName}
+        AND SYSDATE BETWEEN PPA_START_DATE AND NVL(PPA_END_DATE,SYSDATE+1)
+    </select>
+</mapper>
